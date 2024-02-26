@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f2f2f2;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .success-message {
+            color: #4CAF50;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .error-message {
+            color: #f44336;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bookstore Management System</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Genre</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+            <tbody id="book-list">
+                <!-- Book entries will be populated here dynamically -->
+            </tbody>
+        </table>
+        <h2>Add New Book</h2>
+        <form id="add-book-form">
+            <input type="text" id="title" placeholder="Title" required>
+            <input type="text" id="author" placeholder="Author" required>
+            <input type="text" id="genre" placeholder="Genre" required>
+            <input type="number" id="price" placeholder="Price" step="0.01" required>
+            <input type="number" id="quantity" placeholder="Quantity" required>
+            <input type="submit" value="Add Book">
+        </form>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        // Dummy data for initial book list
+        const books = [
+            { id: 1, title: "Book 1", author: "Author 1", genre: "Genre 1", price: 10.99, quantity: 5 },
+            { id: 2, title: "Book 2", author: "Author 2", genre: "Genre 2", price: 15.99, quantity: 8 }
+        ];
+
+        // Function to display books in the table
+        function displayBooks() {
+            const bookList = document.getElementById('book-list');
+            bookList.innerHTML = '';
+
+            books.forEach(book => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${book.id}</td>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.genre}</td>
+                    <td>$${book.price.toFixed(2)}</td>
+                    <td>${book.quantity}</td>
+                `;
+                bookList.appendChild(row);
+            });
+        }
+
+        // Function to add a new book
+        function addBook(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const genre = document.getElementById('genre').value;
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (title && author && genre && price && quantity) {
+                const newBook = {
+                    id: books.length + 1,
+                    title,
+                    author,
+                    genre,
+                    price,
+                    quantity
+                };
+
+                books.push(newBook);
+                displayBooks();
+                document.getElementById('add-book-form').reset();
+                showMessage('Book added successfully!', 'success');
+            } else {
+                showMessage('Please fill in all fields.', 'error');
+            }
+        }
+
+        // Function to display messages
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = message;
+            messageDiv.className = type + '-message';
+
+            setTimeout(() => {
+                messageDiv.textContent = '';
+                messageDiv.className = '';
+            }, 3000);
+        }
+
+        // Display initial books
+        displayBooks();
+
+        // Add event listener to form submission
+        document.getElementById('add-book-form').addEventListener('submit', addBook);
+    </script>
+</body>
+</html>
